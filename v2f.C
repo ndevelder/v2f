@@ -596,11 +596,6 @@ void v2f::correct()
     }
 	
 	
-    //*************************************//	
-    // Timestep - for use in elliptic switch
-    //*************************************//
-	
-    dimensionedScalar cTime = U_.mesh().time().value();
 	word sMMdebug = runTime_.controlDict().lookup("showMaxMin");
 
 
@@ -616,7 +611,8 @@ void v2f::correct()
     //*************************************//	
     // Length and Time Scales
     //*************************************//	
-	
+
+    const dimensionedScalar N("N", dimless, 6.0);	
 	const volScalarField L("Length",Ls());
 	const volScalarField L2("Lsqr",sqr(L));
 	const volScalarField T("Time",Ts());	
@@ -647,36 +643,12 @@ void v2f::correct()
 	const volScalarField pOD = G/epsilon_; 
 	
 	
-    //*************************************//
-    // Non-constant Constants 
-    //*************************************//
-    
-    if(eqnSigmaK_ == "true")
-    {
-	    sigmaK_ = 0.67 + 0.33*pOD;
-	}
 
-    if(eqnSigmaEps_ == "true")
-    {
-	    sigmaEps_ = 0.2 + 0.5*pOD;
-    }
-
-    if(eqnSigmaV2_ == "true")
-    {
-	    sigmaV2_ = 0.33 + (sigmaV2Init_-0.33)*pOD;
-	}
-
-
-	
-	
-
-	
-	
     //*************************************//
     //Dissipation equation
     //*************************************//	
 	
-	volScalarField cEp1eqn("cEp1eqn",1.4*(1.0 + 0.045*min(sqrt(k_/v2_), scalar(2.0))));
+	volScalarField cEp1eqn("cEp1eqn",1.4*(1.0 + 0.05*min(sqrt(k_/v2_), scalar(100.0))));
 
 
     tmp<fvScalarMatrix> epsEqn  
@@ -713,7 +685,7 @@ void v2f::correct()
       - fvm::laplacian(DkEff(), k_)
      ==
         G
-      - fvm::Sp(epsilon_/(k_+k0_),k_)
+      - fvm::Sp(epsilon_/k_,k_)
     );
 
 
@@ -738,7 +710,6 @@ void v2f::correct()
     gradk_ = fvc::grad(k_);
     gradkSqrt_ = fvc::grad(kSqrt_);
     
-
 
 	// Pressure strain terms	
 	const volScalarField slowPS
@@ -785,7 +756,7 @@ void v2f::correct()
       - fvm::laplacian(Dv2Eff(), v2_)
       ==
         min(k_*f_, k_*(slowPS + fastPS + fwall))
-	  - fvm::Sp(6.0/T, v2_)
+	  - fvm::Sp(6.0*epsilon_/k_, v2_)
     );
 	
 
@@ -799,13 +770,8 @@ void v2f::correct()
     // Calculate eddy viscosity
     if(solveNut_ == "true")
     {
-		//nut_ = cMu_*v2_*Ts();	
-        //nut_ = min(nut_,nutRatMax_*nu());        
-        //nut_.correctBoundaryConditions();
-        //bound(nut_,dimensionedScalar("minNut", nut_.dimensions(), ROOTVSMALL));     
-
-   
-        nut_ = davidsonCorrectNut(cMu_*v2_*Ts());
+ 
+        nut_ = davidsonCorrectNut(cMu_*v2_*T);
 		nut_ = min(nut_,nutRatMax_*nu());
         nut_.correctBoundaryConditions();		
     }
