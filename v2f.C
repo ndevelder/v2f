@@ -51,13 +51,13 @@ addToRunTimeSelectionTable(RASModel, v2f, dictionary);
 
 tmp<volScalarField> v2f::Ts() const
 { 
-    return min(max(k_/(epsilon_ + epsilonSmall_), 6.0*sqrt(nu()/(epsilon_ + epsilonSmall_))), 0.6*(k_+k0_)/(1.732*cMu_*v2_*sqrt(2.0*magSqr(dev(symm(uGrad_))))));
+    return min(max(k_/(epsilon_ + epsilonSmall_), 6.0*sqrt(nu()/(epsilon_ + epsilonSmall_))), 0.6*(k_+k0_)/(epsilonSmall_ + 1.732*cMu_*v2_*sqrt(2.0*magSqr(dev(symm(uGrad_))))));
 }
 
 
 tmp<volScalarField> v2f::Ls() const
 {	
-	return cL1_*max(min(pow(k_+k0_, 1.5)/(epsilon_ + epsilonSmall_),pow((k_+k0_),1.5)/(2.45*cMu_*v2_*sqrt(2.0*magSqr(dev(symm(uGrad_)))))),cL2_*pow(pow3(nu())/(epsilon_ + epsilonSmall_),0.25));
+	return cL1_*max(min(pow(k_+k0_, 1.5)/(epsilon_ + epsilonSmall_),pow((k_+k0_),1.5)/(epsilonSmall_ + 2.45*cMu_*v2_*sqrt(2.0*magSqr(dev(symm(uGrad_)))))),cL2_*pow(pow3(nu())/(epsilon_ + epsilonSmall_),0.25));
 }
 
 tmp<volScalarField> v2f::davidsonCorrectNut
