@@ -97,6 +97,7 @@ class v2f
             word              eqnSigmaK_;
             word              eqnSigmaEps_;
             word              eqnSigmaV2_;
+			word              realNut_;
 			word              debugWrite_;
 
         //- Wall distance field

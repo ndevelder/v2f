@@ -236,6 +236,11 @@ v2f::v2f
    (
        coeffDict_.lookup("eqnSigmaV2")
    ),
+   
+   realNut_
+   (
+       coeffDict_.lookup("realNut")
+   ),
 
    debugWrite_
    (
@@ -765,7 +770,13 @@ void v2f::correct()
     if(solveNut_ == "true")
     {
  
-        nut_ = min(cMu_*v2_*T,0.577*k_/magS);
+        nut_ = min(cMu_*v2_*T,betaK_*k_*k_/epsilon_);
+		
+		if(realNut_ == "true")
+		{
+			nut_ = min(nut_,0.577*k_/magS);
+		}
+		
 		nut_ = min(nut_,nutRatMax_*nu());
         nut_.correctBoundaryConditions();		
     }
