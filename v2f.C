@@ -765,7 +765,7 @@ void v2f::correct()
     if(solveNut_ == "true")
     {
  
-        nut_ = min(cMu_*v2_*T,0.6*k_/(2.45*magS));
+        nut_ = min(cMu_*v2_*T,0.577*k_/magS);
 		nut_ = min(nut_,nutRatMax_*nu());
         nut_.correctBoundaryConditions();		
     }
