@@ -770,11 +770,12 @@ void v2f::correct()
     if(solveNut_ == "true")
     {
  
-        nut_ = min(cMu_*v2_*T,betaK_*k_*k_/epsilon_);
+        nut_ = cMu_*v2_*T;
 		
 		if(realNut_ == "true")
 		{
-			nut_ = min(nut_,0.577*k_/magS);
+			nut_ = min(nut_,0.6*k_/(2.45*magS));
+			Info << "Using realizability constraint" << endl;
 		}
 		
 		nut_ = min(nut_,nutRatMax_*nu());
