@@ -1,0 +1,31 @@
+diff -Naur turbulentPotential/turbulentPotential.C turbulentPotentialFixU/turbulentPotential.C
+--- v2f.C	
++++ v2f.C	
+@@ -963,14 +963,14 @@
+ }
+ 
+ // Term that is directly added to the momentum equation
+-tmp<fvVectorMatrix> v2f::divDevReff(volVectorField& U) const
++tmp<fvVectorMatrix> v2f::divDevReff() const
+ {
+     return
+     (
+-     - fvm::laplacian(nuEff(), U)
+-     - fvc::div(nuEff()*dev(fvc::grad(U)().T()))
++     - fvm::laplacian(nuEff(), U_)
++     - fvc::div(nuEff()*dev(fvc::grad(U_)().T()))
+     );
+ }
+ 
+diff -Naur turbulentPotential/turbulentPotential.H turbulentPotentialFixU/turbulentPotential.H
+--- v2f.H
++++ v2f.H
+@@ -401,7 +401,7 @@
+         virtual tmp<volSymmTensorField> devReff() const;
+ 
+         //- Return the source term for the momentum equation
+-        virtual tmp<fvVectorMatrix> divDevReff(volVectorField& U) const;
++        virtual tmp<fvVectorMatrix> divDevReff() const;
+ 
+         //- Solve the turbulence equations and correct the turbulence viscosity
+         virtual void correct();
