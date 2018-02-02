@@ -1,7 +1,7 @@
-diff -Naur turbulentPotential/turbulentPotential.C turbulentPotentialFixU/turbulentPotential.C
---- v2f.C	
-+++ v2f.C	
-@@ -963,14 +963,14 @@
+diff -Naurp v2f/v2f.C v2fnew/v2f.C
+--- v2f/v2f.C	2018-02-02 12:54:47.000000000 -0600
++++ v2fnew/v2f.C	2018-02-02 12:57:01.000000000 -0600
+@@ -527,12 +527,12 @@ tmp<volSymmTensorField> v2f::devReff() c
  }
  
  // Term that is directly added to the momentum equation
@@ -10,17 +10,17 @@ diff -Naur turbulentPotential/turbulentPotential.C turbulentPotentialFixU/turbul
  {
      return
      (
--     - fvm::laplacian(nuEff(), U)
--     - fvc::div(nuEff()*dev(fvc::grad(U)().T()))
-+     - fvm::laplacian(nuEff(), U_)
-+     - fvc::div(nuEff()*dev(fvc::grad(U_)().T()))
-     );
+-      - fvm::laplacian(nuEff(), U)
+-      - fvc::div(nuEff()*dev(fvc::grad(U)().T()))
++      - fvm::laplacian(nuEff(), U_)
++      - fvc::div(nuEff()*dev(fvc::grad(U_)().T()))
+ 	);
  }
  
-diff -Naur turbulentPotential/turbulentPotential.H turbulentPotentialFixU/turbulentPotential.H
---- v2f.H
-+++ v2f.H
-@@ -401,7 +401,7 @@
+diff -Naurp v2f/v2f.H v2fnew/v2f.H
+--- v2f/v2f.H	2018-02-02 12:54:52.000000000 -0600
++++ v2fnew/v2f.H	2018-02-02 12:57:01.000000000 -0600
+@@ -292,7 +292,7 @@ public:
          virtual tmp<volSymmTensorField> devReff() const;
  
          //- Return the source term for the momentum equation
