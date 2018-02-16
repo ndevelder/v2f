@@ -527,12 +527,12 @@ tmp<volSymmTensorField> v2f::devReff() const
 }
 
 // Term that is directly added to the momentum equation
-tmp<fvVectorMatrix> v2f::divDevReff() const
+tmp<fvVectorMatrix> v2f::divDevReff(volVectorField& U) const
 {
     return
     (
-      - fvm::laplacian(nuEff(), U_)
-      - fvc::div(nuEff()*dev(fvc::grad(U_)().T()))
+      - fvm::laplacian(nuEff(), U)
+      - fvc::div(nuEff()*dev(fvc::grad(U)().T()))
 	);
 }
 
